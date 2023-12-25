@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package chat_connector;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "pkg.chat_connector.v1;chatv1";
+
+service ChatConnector {
+  rpc CreateChat (CreateChatRequest) returns (CreateChatResponse);
+  rpc ConnectChat (ConnectChatRequest) returns (stream Message);
+  rpc LeaveChat (LeaveChatRequest) returns (LeaveChatResponse);
+  rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
+  rpc CheckMember (CheckMemberRequest) returns (CheckMemberResponse);
+}
+
+message CreateChatRequest {
+  int32 name = 1;
+  repeated int32 member_ids = 2;
+}
+
+message CreateChatResponse {
+  int32 chat_id = 1;
+}
+
+message LeaveChatRequest {
+  int32 chat_id = 1;
+  int32 user_id = 2;
+}
+
+message LeaveChatResponse {
+  bool success = 1;
+}
+
+message SendMessageRequest {
+  int32 chat_id = 1;
+  int32 user_id = 2;
+  google.protobuf.Timestamp created_at = 3;
+  string text = 4;
+}
+
+message SendMessageResponse {
+  int32 message_id = 1;
+}
+
+message CheckMemberRequest {
+  int32 chat_id = 1;
+  int32 user_id = 2;
+}
+
+message CheckMemberResponse {
+  bool is_member = 1;
+}
+
+message ConnectChatRequest {
+  int32 chat_id = 1;
+  int32 user_id = 2;
+}
+
+message ConnectChatResponse {
+  repeated Message messages = 1;
+}
+
+message Message {
+  int32 message_id = 1;
+  int32 user_id = 2;
+  google.protobuf.Timestamp created_at = 3;
+  string text = 4;
+}
+
+
